@@ -415,6 +415,12 @@ def seed():
     created = []
     try:
         if db.query(Course).count() == 0:
+            # Preserve the explicit author-defined ordering by adding a display_order
+            # field based on the list position. This makes ordering deterministic
+            # and editable via the admin dashboard (Course.display_order).
+            for idx, item in enumerate(COURSES):
+                item["display_order"] = idx
+
             for item in COURSES:
                 schedules = item.pop("schedules", [])
                 faqs = item.pop("faqs", [])

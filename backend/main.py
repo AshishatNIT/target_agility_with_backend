@@ -82,7 +82,8 @@ def root():
 # ---------------------------------------------------------------------------
 @app.get("/api/courses")
 def get_courses(db: Session = Depends(get_db)):
-    return [course.to_dict() for course in db.query(Course).all()]
+    # Return courses in a deterministic order controlled by the `display_order` field
+    return [course.to_dict() for course in db.query(Course).order_by(Course.display_order.asc(), Course.title.asc()).all()]
 
 
 @app.get("/api/events")
@@ -156,9 +157,9 @@ class CourseAdmin(ModelView, model=Course):
     name_plural = "Courses"
     icon = "fa-solid fa-graduation-cap"
     form_include_pk = True  # id is a user-supplied slug (e.g. "psm-1"), not autoincremented
-    column_list = [Course.id, Course.title, Course.category, Course.badge]
+    column_list = [Course.id, Course.title, Course.display_order, Course.category, Course.badge]
     column_searchable_list = [Course.title, Course.category]
-    column_sortable_list = [Course.title, Course.category]
+    column_sortable_list = [Course.display_order, Course.title, Course.category]
 
 
 class CourseScheduleAdmin(ModelView, model=CourseSchedule):

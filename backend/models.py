@@ -40,6 +40,8 @@ class Course(Base, SerializerMixin):
     short_title = Column(String, nullable=True)
     category = Column(String, nullable=False, index=True)
     badge = Column(String, nullable=True)
+    # integer field to control display ordering of courses; lower values appear first
+    display_order = Column(Integer, default=0, index=True)
     description = Column(Text, nullable=True)
     overview = Column(Text, nullable=True)
     key_features = Column(JSON, default=list)

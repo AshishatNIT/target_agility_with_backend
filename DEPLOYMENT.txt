@@ -149,6 +149,16 @@ Notes:
    ALLOWED_ORIGINS variable, then let the backend restart.
 
 
+8. Render's static site hosting needs a Rewrite Rule so that any route falls back to index.html.
+   Go to your Render Dashboard and open your Static Site (Frontend).
+   Click on Redirects/Rewrites in the left sidebar.
+   Click Add Rule and fill it in:
+    Source: /*
+    Destination: /index.html
+    Action: Rewrite
+   Click Save Changes.
+
+
 ---------------------------------------------------------------------------
  THINGS TO KEEP IN MIND
 ---------------------------------------------------------------------------

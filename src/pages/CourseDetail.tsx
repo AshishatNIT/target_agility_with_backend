@@ -53,7 +53,12 @@ const tabs = [
 const CourseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { data: courses, loading, error } = useFetch<ApiCourse[]>("courses");
-  const course = (courses ?? []).find((c) => c.id === id);
+  const sortedCourses = [...(courses ?? [])].sort((a, b) =>
+    ((a as any).display_order ?? (a as any).displayOrder ?? 0) -
+    ((b as any).display_order ?? (b as any).displayOrder ?? 0) ||
+    a.title.localeCompare(b.title),
+  );
+  const course = sortedCourses.find((c) => c.id === id);
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Overview");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -86,7 +91,7 @@ const CourseDetail = () => {
     );
   }
 
-  const related = (courses ?? [])
+  const related = sortedCourses
     .filter((c) => c.category === course.category && c.id !== course.id)
     .slice(0, 3);
 

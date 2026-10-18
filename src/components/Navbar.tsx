@@ -8,6 +8,7 @@ interface NavCourse {
   id: string;
   title: string;
   shortTitle: string;
+  displayOrder?: number;
 }
 
 const Navbar = () => {
@@ -18,6 +19,11 @@ const Navbar = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const { data } = useFetch<NavCourse[]>("courses");
   const courses = data ?? [];
+  const sortedCourses = [...courses].sort((a, b) =>
+    ((a as any).display_order ?? (a as any).displayOrder ?? 0) -
+    ((b as any).display_order ?? (b as any).displayOrder ?? 0) ||
+    a.title.localeCompare(b.title),
+  );
 
   return (
     <nav className="bg-card shadow-sm sticky top-0 z-50">
@@ -50,7 +56,7 @@ const Navbar = () => {
                           Our Courses
                         </h3>
                         <div className="grid grid-cols-3 gap-x-6 gap-y-4">
-                          {courses.map((course) => (
+                          {sortedCourses.map((course) => (
                             <Link
                               key={course.id}
                               to={`/courses/${course.id}`}
@@ -192,7 +198,7 @@ const Navbar = () => {
                   </button>
                   {mobileCoursesOpen && (
                     <div className="pl-4 pb-2">
-                      {courses.map((course) => (
+                      {sortedCourses.map((course) => (
                         <Link
                           key={course.id}
                           to={`/courses/${course.id}`}
